@@ -24,7 +24,7 @@ shinyServer(function(input, output, session) {
   job_id_puv<-reactive({
     api<- input$api
     if(api==c('')){
-      job_id<-c('NA')
+      job_id_puv<-c('NA')
     } else {
     session_t <- paste0('http://api.mobileapptracking.com/v2/session/authenticate/api_key.json?&api_keys=',api)
     token <- fromJSON(file=session_t)
@@ -33,7 +33,18 @@ shinyServer(function(input, output, session) {
     end_date <- input$dates[2]
     export_url <- paste0("http://api.mobileapptracking.com/v2/advertiser/stats/events/findExportQueue.json?session_token=",session_token,"&fields=created%2Csite.name%2Cpublisher.name%2Csite_event.name%2Cpayout%2Crevenue_usd%2Cuser_id%2Cuser_email_md5%2Cadvertiser_sub_campaign.name%2Cadvertiser_sub_adgroup.name%2Cadvertiser_sub_ad.name%2Csite_id%2Cpublisher_id%2Csite_event_id%2Cadvertiser_sub_campaign_id%2Cadvertiser_sub_adgroup_id%2Cadvertiser_sub_ad_id%2Cid%2Crevenue%2Ccurrency_code%2Csite_event_items_count&sort%5Bcreated%5D=desc&filter=(status+%3D+'approved')+AND+(publisher_id+%3E+0)+AND+((debug_mode%3D0+OR+debug_mode+is+NULL)+AND+(test_profile_id%3D0+OR+test_profile_id+IS+NULL))&group=advertiser_sub_campaign_id%2Cadvertiser_sub_adgroup_id%2Cadvertiser_sub_ad_id%2Csite_id%2Cpublisher_id%2Csite_event_id&start_date=",start_date,"&end_date=",end_date,"&response_timezone=Asia%2FSeoul&limit=1062&format=csv")
     export_url_json <- fromJSON(file=export_url)
-    job_id_puv <-export_url_json$data
+
+    if(!is.null(export_url_json$data)) {
+    return(export_url_json$data)
+    } else {
+    while(is.null(export_url_json$data)){
+    export_url_json<-fromJSON(file=export_url)
+    if(!is.null(export_url_json$data)){
+    export_url_json <- fromJSON(file=export_url)
+    return(export_url_json$data)
+    }
+    }
+    }
     }
     })
 
