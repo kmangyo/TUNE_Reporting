@@ -2,6 +2,7 @@ library(shiny)
 library(rjson)
 library(dplyr)
 library(stringi)
+library(scales)
 
 shinyUI(fluidPage(
   titlePanel("TUNE Real-Time Reporting"),
@@ -17,8 +18,11 @@ shinyUI(fluidPage(
       verbatimTextOutput("job_id"),
       h4("DL_URL"),         
       verbatimTextOutput("dl_url"),
-      h4("REPORT"),
-      DT::dataTableOutput("report")
+      tabsetPanel(
+        tabPanel("REPORT_cumsum", DT::dataTableOutput("report_cumsum")),
+        tabPanel("REPORT_time", DT::dataTableOutput("report_time"))
+        )
+      )
   )
   )
-))
+)
