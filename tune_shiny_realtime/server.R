@@ -106,7 +106,10 @@ shinyServer(function(input, output, session) {
     report<- report %>% arrange(id, Timestamp)
     report$cumsum_ad_click<-with(report, ave(Ad_click,id,FUN=cumsum))
     report$cumsum_install<-with(report, ave(Install,id,FUN=cumsum))
-    report$cumsum.CVR.install<-percent(with(report, (cumsum_install/cumsum_ad_click)))
+    report$cumsum.CVR.install<-with(report, (cumsum_install/cumsum_ad_click))
+    report$cumsum.CVR.install[is.na(report$cumsum.CVR.install)]<-0
+    report$cumsum.CVR.install[is.infinite(report$cumsum.CVR.install)]<-0
+    report$cumsum.CVR.install<-percent(report$cumsum.CVR.install)
     report$cumsum_revenues<-with(report, ave(Revenues,id,FUN=cumsum))
     report$cumsum_PURCHASE<-with(report, ave(Purchase,id,FUN=cumsum))
     report$cumsum_REGISTRATION<-with(report, ave(Registration,id,FUN=cumsum))
@@ -116,5 +119,4 @@ shinyServer(function(input, output, session) {
     report
     }
   }))
-
 })
