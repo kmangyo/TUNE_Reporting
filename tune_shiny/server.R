@@ -61,7 +61,6 @@ shinyServer(function(input, output, session) {
       } else {
           while(dl_url$data$status != c('complete')){
           dl_url<-fromJSON(file=csv_url)
-          print(dl_url$data$data$status)
             if(dl_url$data$status == c('complete')){
             dl_url <- dl_url$data$data$url
             return(dl_url)
@@ -82,7 +81,6 @@ shinyServer(function(input, output, session) {
       } else {
         while(dl_url$data$status != c('complete')){
         dl_url <- fromJSON(file=csv_url)
-        print(dl_url$data$data$status)
           if(dl_url$data$status == c('complete')){
           dl_url <- dl_url$data$data$url
           return(dl_url)
@@ -122,7 +120,10 @@ shinyServer(function(input, output, session) {
     report[4:ncol(report)][is.na(report[4:ncol(report)])] <- 0
     report <- report[c('timestamp','publisher.name','advertiser_sub_ad.name','ad_click.','installs.INSTALL','revenues.PURCHASE','events.PURCHASE','events.REGISTRATION','opens.OPEN')]
     report <- subset(report, publisher.name!=c('organic'))
-    report$CVR.install<-percent(with(report, (installs.INSTALL/ad_click.)))
+    report$CVR.install<-with(report, (installs.INSTALL/ad_click.))
+    report$CVR.install[is.na(report$CVR.install)]<-0
+    report$CVR.install[is.infinite(report$CVR.install)]<-0
+    report$CVR.install<-percent(report$CVR.install)  
     names(report)<-c('Timestamp','Publisher.name','Advertiser_sub_ad.name','Ad_click','Install','Revenues','Purchase','Registration','Open','CVR.install')
     report<-report[c(1:5,10,6:9)]
     report
@@ -142,5 +143,4 @@ shinyServer(function(input, output, session) {
     report_puv
     }
   }))
-
 })
