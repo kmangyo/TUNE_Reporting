@@ -22,3 +22,6 @@ Tune reporting with shiny app
 
 - Date: 2016-05-20
   - Description: Migrate to API v3 in log data.
+
+- Date: 2016-05-24
+  - Description: w/o input job_id in Tune Report.
