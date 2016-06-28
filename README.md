@@ -25,3 +25,7 @@ Tune reporting with shiny app
 
 - Date: 2016-05-24
   - Description: w/o input job_id in Tune Report.
+
+### Tune reporting Ver. 1
+- Date: 2016-06-28
+  - Description: Dynamic selection based on media and creatives name.
